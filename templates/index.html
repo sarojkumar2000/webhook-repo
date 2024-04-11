@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Events</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <div id="events"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function fetchEvents() {
+            $.get('/events', function(data) {
+                $('#events').empty();
+                data.forEach(function(event) {
+                    if (event.action === 'push') {
+                        $('#events').append('<p>' + event.author + ' pushed to ' + event.to_branch + ' on ' + event.timestamp + '</p>');
+                    } else if (event.action === 'pull_request') {
+                        $('#events').append('<p>' + event.author + ' submitted a pull request from ' + event.from_branch + ' to ' + event.to_branch + ' on ' + event.timestamp + '</p>');
+                    } else if (event.action === 'merge') {
+                        $('#events').append('<p>' + event.author + ' merged branch ' + event.from_branch + ' to ' + event.to_branch + ' on ' + event.timestamp + '</p>');
+                    }
+                });
+            });
+        }
+        // Fetch events every 15 seconds
+        setInterval(fetchEvents, 15000);
+        // Initial fetch
+        fetchEvents();
+    </script>
+</body>
+</html>
