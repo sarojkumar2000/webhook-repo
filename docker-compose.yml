@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  github_events:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+  ngrok:
+    image: ngrok:latest
+    ports:
+      - "4040:4040"  # Ngrok web interface port
+    command: ["ngrok", "http", "github_events:5000"]
+
+volumes:
+  mongodb-data:
